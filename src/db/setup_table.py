@@ -7,8 +7,8 @@ def create_jobs_table(conn):
 
     """
     query_string = """
-        CREATE TABLE jobs(
-            id integer PRIMARY KEY, 
+        CREATE TABLE IF NOT EXISTS jobs(
+            id integer PRIMARY KEY,
             timestamp text,
             source text,
             header text,

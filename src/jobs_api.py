@@ -8,13 +8,20 @@ from fastapi import FastAPI
 from fastapi.requests import Request
 import uvicorn
 
+from src.db import connect, setup_table
 from src.request_models import JobsRequestPayload
+
+conn = connect.connect_to_postgres()
+setup_table.create_jobs_table(conn)
 
 app = FastAPI()
 
+@app.get("/health")
+def health_check():
+    return {"status": "OK"}
 
 @app.post("/")
-def request_jobs(payload: JobsRequestPayload):
+def post_jobs(payload: JobsRequestPayload):
     """
     #TODO: Implement connection to DB and query
     """
