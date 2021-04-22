@@ -28,4 +28,3 @@ def create_jobs_table(conn):
     cursor = conn.cursor()
     cursor.execute(query_string)
     conn.commit()
-    conn.close()
