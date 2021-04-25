@@ -6,6 +6,7 @@ import logging
 
 from fastapi import FastAPI
 from fastapi.requests import Request
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from src.db import connect, setup_table, jobs
@@ -16,6 +17,15 @@ setup_table.create_jobs_table(conn)
 
 app = FastAPI()
 
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/health")
 def health_check():
