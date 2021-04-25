@@ -8,7 +8,7 @@ install:
 	pip3 install -r requirements.txt
 
 dev:
-	uvicorn src.jobs_api:app --port 80
+	uvicorn src.jobs_api:app
 
 health-check:
 	curl localhost:8000/health

@@ -13,12 +13,7 @@ def test_request():
     """
     Test sending simple request to jobs api
     """
-    request_dict = {
-        "language": "de",
-        "request_all": True,
-    }
-
-    response = client.post(
-        "/", headers={"X-Token": "coneofsilence"}, json=request_dict
+    response = client.get(
+        "/", headers={"X-Token": "coneofsilence"}
     )
     assert response.status_code == 200
