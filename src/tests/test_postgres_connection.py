@@ -4,6 +4,7 @@ Test the connection to the postgresql db
 import logging
 
 from src.db.connect import connect_to_postgres
+from src.db.jobs import get_jobs
 
 
 def test_postgres():
@@ -17,4 +18,9 @@ def test_postgres():
     tables = cur.fetchall()
     assert tables
 
+
+def test_jobs():
+    conn = connect_to_postgres()
+    jobs = get_jobs(conn)
+    assert jobs
 

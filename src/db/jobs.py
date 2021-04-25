@@ -1,5 +1,7 @@
 """Sets up the jobs table"""
 
+import psycopg2.extras
+
 
 def get_jobs(conn):
     """
@@ -9,6 +11,11 @@ def get_jobs(conn):
     query_string = """
         SELECT * FROM jobs LIMIT 20;
     """
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cursor.execute(query_string)
-    return cursor.fetchall()
+    jobs_tuples = cursor.fetchall()
+    jobs = []
+    for job in jobs_tuples:
+        jobs.append(dict(job))
+
+    return jobs
