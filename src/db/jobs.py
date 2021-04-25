@@ -1,12 +1,15 @@
 """Sets up the jobs table"""
 
+from typing import List, Dict
+
 import psycopg2.extras
 
 
-def get_jobs(conn):
+def get_jobs(conn) -> List[Dict]:
     """
     Check if the jobs table exists. If not, create it.
-
+    Returns:
+        [{"timestamp: "", poster:"",..}, {}]
     """
     query_string = """
         SELECT * FROM jobs LIMIT 20;
