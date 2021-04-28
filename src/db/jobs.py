@@ -22,3 +22,21 @@ def get_jobs(conn) -> List[Dict]:
         jobs.append(dict(job))
 
     return jobs
+
+def get_job_by_id(conn, jobId: int) -> Dict:
+    """
+    try to return the job with the provided jobId
+    """
+    if not jobId or jobId == "":
+        return {}
+    
+    query_string = f'SELECT * FROM jobs WHERE id = {jobId};'
+        
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor.execute(query_string)
+    job = cursor.fetchone()
+    
+    if job:
+        return dict(job)
+
+    return {}

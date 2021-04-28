@@ -17,7 +17,7 @@ setup_table.create_jobs_table(conn)
 
 app = FastAPI()
 
-origins = ["*"]
+origins = ["http://localhost:8080","https://localhost:8080", "https://redi-school.github.io"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -42,6 +42,14 @@ def post_jobs(payload: JobsRequestPayload):
     #return jobs
     return
 
+
+@app.get("/{jobId}")
+def get_jobs(jobId: int):
+    """
+    Return all jobs from DB
+    """
+    queried_jobs = jobs.get_job_by_id(conn, jobId)
+    return queried_jobs
 
 @app.get("/")
 def get_jobs():
