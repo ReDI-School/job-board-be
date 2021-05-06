@@ -1,19 +1,27 @@
 """Sets up the jobs table"""
 
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 import psycopg2.extras
 
 
-def get_jobs(conn) -> List[Dict]:
+def get_jobs(conn, limit=20, skip=0, language: Optional[str] = None, employment_type: Optional[str] = None, experience_level: Optional[str] = None) -> List[Dict]:
     """
     Check if the jobs table exists. If not, create it.
     Returns:
         [{"timestamp: "", poster:"",..}, {}]
     """
-    query_string = """
-        SELECT * FROM jobs LIMIT 20;
-    """
+
+    query_string = f"SELECT * FROM jobs WHERE ID > 0 "
+    if language:
+        query_string += f"AND language = '{language}' "
+    if employment_type:
+        query_string += f"AND employment_type = '{employment_type}' "
+    if experience_level:
+        query_string += f"AND experience_level = '{experience_level}' "
+
+    query_string += f"LIMIT {limit} OFFSET {skip};"
+
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cursor.execute(query_string)
     jobs_tuples = cursor.fetchall()
@@ -22,6 +30,7 @@ def get_jobs(conn) -> List[Dict]:
         jobs.append(dict(job))
 
     return jobs
+
 
 def get_job_by_id(conn, jobId: int) -> Dict:
     """

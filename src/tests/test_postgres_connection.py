@@ -21,6 +21,6 @@ def test_postgres():
 
 def test_jobs():
     conn = connect_to_postgres()
-    jobs = get_jobs(conn)
+    jobs = get_jobs(conn, limit=2, skip=0, employment_type="Full-Time", experience_level="Entry-level")
     assert jobs
 

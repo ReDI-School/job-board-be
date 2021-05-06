@@ -3,6 +3,7 @@ Jobs API
 """
 
 import logging
+from typing import Optional
 
 from fastapi import FastAPI
 from fastapi.requests import Request
@@ -51,8 +52,9 @@ def get_jobs(jobId: int):
     queried_jobs = jobs.get_job_by_id(conn, jobId)
     return queried_jobs
 
+
 @app.get("/")
-def get_jobs():
+def get_jobs(skip: int = 0, limit: int = 20, language: Optional[str] = None, employment_type: Optional[str] = None, experience_level: Optional[str] = None):
     """
     Return all jobs from DB
     """
