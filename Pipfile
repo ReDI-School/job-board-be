@@ -1,0 +1,18 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+pandas = "==1.2.3"
+pydantic = "==1.8.1"
+fastapi = "==0.63.0"
+uvicorn = "==0.13.4"
+python-dotenv = "==0.17.0"
+psycopg2-binary = "==2.8.6"
+pytest = "==6.2.3"
+
+[requires]
+python_version = "3.7"

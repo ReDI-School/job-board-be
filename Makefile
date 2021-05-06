@@ -12,3 +12,8 @@ dev:
 
 health-check:
 	curl localhost:8000/health
+
+deploy:
+	uvicorn src.jobs_api:app --host 0.0.0.0 --port 443 --ssl-keyfile=./certs/privkey.pem --ssl-certfile=./certs/fullchain.pem
+
+

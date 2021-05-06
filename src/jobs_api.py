@@ -58,7 +58,7 @@ def get_jobs(skip: int = 0, limit: int = 20, language: Optional[str] = None, emp
     """
     Return all jobs from DB
     """
-    queried_jobs = jobs.get_jobs(conn)
+    queried_jobs = jobs.get_jobs(conn, limit, skip, language, employment_type, experience_level)
     return queried_jobs
 
 
