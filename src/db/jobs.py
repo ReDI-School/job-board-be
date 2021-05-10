@@ -11,25 +11,34 @@ def get_jobs(conn, limit=20, skip=0, language: Optional[str] = None, employment_
     Returns:
         [{"timestamp: "", poster:"",..}, {}]
     """
-
-    query_string = f"SELECT * FROM jobs WHERE ID > 0 "
-    if language:
-        query_string += f"AND language = '{language}' "
-    if employment_type:
-        query_string += f"AND employment_type = '{employment_type}' "
-    if experience_level:
-        query_string += f"AND experience_level = '{experience_level}' "
-
-    query_string += f"LIMIT {limit} OFFSET {skip};"
-
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cursor.execute(query_string)
-    jobs_tuples = cursor.fetchall()
-    jobs = []
-    for job in jobs_tuples:
-        jobs.append(dict(job))
+    try:
+        query_string = f"SELECT * FROM jobs WHERE ID > 0 "
+        if language:
+            query_string += f"AND language = '{language}' "
+        if employment_type:
+            query_string += f"AND employment_type = '{employment_type}' "
+        if experience_level:
+            query_string += f"AND experience_level = '{experience_level}' "
 
-    return jobs
+        query_string += f"LIMIT {limit} OFFSET {skip};"
+
+        cursor.execute(query_string)
+        jobs_tuples = cursor.fetchall()
+
+        if len(jobs_tuples)<1:
+            raise Exception("no items found")
+
+        jobs = []
+        for job in jobs_tuples:
+            jobs.append(dict(job))
+
+        return jobs
+    except:
+        cursor.execute("ROLLBACK")
+        raise 
+
+    
 
 
 def get_job_by_id(conn, jobId: int) -> Dict:

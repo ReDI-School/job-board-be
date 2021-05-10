@@ -5,7 +5,7 @@ Jobs API
 import logging
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.requests import Request
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
@@ -58,9 +58,14 @@ def get_jobs(skip: int = 0, limit: int = 20, language: Optional[str] = None, emp
     """
     Return all jobs from DB
     """
-    queried_jobs = jobs.get_jobs(conn, limit, skip, language, employment_type, experience_level)
-    return queried_jobs
+    
+    try:
+        queried_jobs = jobs.get_jobs(conn, limit, skip, language, employment_type, experience_level)
+        return queried_jobs
+    except:
+        raise HTTPException(status_code=404, detail="Could not find any jobs for the provided query")
 
+        
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=5000)
