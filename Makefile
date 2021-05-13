@@ -16,4 +16,6 @@ health-check:
 deploy:
 	uvicorn src.jobs_api:app --host 0.0.0.0 --port 443 --ssl-keyfile=./certs/privkey.pem --ssl-certfile=./certs/fullchain.pem
 
+stop-server:
+	sudo kill -9 $$(sudo lsof -t -i:443)
 

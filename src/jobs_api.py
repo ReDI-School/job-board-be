@@ -49,9 +49,11 @@ def get_jobs(jobId: int):
     """
     Return all jobs from DB
     """
-    queried_jobs = jobs.get_job_by_id(conn, jobId)
-    return queried_jobs
-
+    try:
+        queried_jobs = jobs.get_job_by_id(conn, jobId)
+        return queried_jobs
+    except Exception as err:
+        raise HTTPException(status_code=404, detail=str(err))
 
 @app.get("/")
 def get_jobs(skip: int = 0, limit: int = 20, language: Optional[str] = None, employment_type: Optional[str] = None, experience_level: Optional[str] = None):

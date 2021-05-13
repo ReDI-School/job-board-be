@@ -13,6 +13,7 @@ def get_jobs(conn, limit=20, skip=0, language: Optional[str] = None, employment_
     """
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     try:
+        # query_string = f"SELECT *, count(*) OVER() as full_count FROM jobs WHERE ID > 0 "
         query_string = f"SELECT * FROM jobs WHERE ID > 0 "
         if language:
             query_string += f"AND language = '{language}' "
@@ -45,16 +46,22 @@ def get_job_by_id(conn, jobId: int) -> Dict:
     """
     try to return the job with the provided jobId
     """
-    if not jobId or jobId == "":
-        return {}
-    
-    query_string = f'SELECT * FROM jobs WHERE id = {jobId};'
+    try:
+        #if not jobId or jobId == "":
+        #    raise ValueError("no valid job id provided")
         
-    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cursor.execute(query_string)
-    job = cursor.fetchone()
-    
-    if job:
+        query_string = f'SELECT * FROM jobs WHERE id = {jobId};'
+            
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute(query_string)
+        job = cursor.fetchone()
+        
+        if not job:
+            raise Exception(f"Could not find job for the provided id: {jobId}")
+        
         return dict(job)
-
-    return {}
+                
+    except:
+        # maybe rollback here not sure if needed tho
+        raise
+    
