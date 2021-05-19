@@ -5,7 +5,7 @@ Jobs API
 import logging
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
@@ -55,17 +55,17 @@ def get_jobs(jobId: int):
         raise HTTPException(status_code=404, detail=str(err))
 
 @app.get("/")
-def get_jobs(response: Response, skip: int = 0, limit: int = 20, language: Optional[str] = None, employment_type: Optional[str] = None, experience_level: Optional[str] = None):
+def get_jobs(skip: int = 0, limit: int = 20, language: Optional[str] = None, employment_type: Optional[str] = None, experience_level: Optional[str] = None):
     """
     Return all jobs from DB
     """
     
     try:
         queried_jobs = jobs.get_jobs(conn, limit, skip, language, employment_type, experience_level)
-        loaded_jobs_count=len(queried_jobs["jobs"]) or 0
-        total_jobs_count=queried_jobs["count"] or 0
-        response.headers["Content-Range"]=f"{skip}-{loaded_jobs_count+skip}/{total_jobs_count}"
-        return queried_jobs["jobs"]
+        queried_jobs["loaded"]=len(queried_jobs["jobs"]) or 0
+        queried_jobs["start"]=skip
+
+        return queried_jobs
     except Exception as err:
         raise HTTPException(status_code=404, detail=str(err))
 
