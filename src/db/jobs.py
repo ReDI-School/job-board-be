@@ -5,7 +5,7 @@ from typing import List, Dict, Optional
 import psycopg2.extras
 
 
-def get_jobs(conn, limit=20, skip=0, language: Optional[str] = None, employment_type: Optional[str] = None, experience_level: Optional[str] = None) -> List[Dict]:
+def get_jobs(conn, limit=20, skip=0, language: Optional[str] = None, employment_type: Optional[str] = None, experience_level: Optional[str] = None) :
     """
     Check if the jobs table exists. If not, create it.
     Returns:
@@ -34,7 +34,17 @@ def get_jobs(conn, limit=20, skip=0, language: Optional[str] = None, employment_
         for job in jobs_tuples:
             jobs.append(dict(job))
 
-        return jobs
+        # count all jobs in the database. Doing that in a seperate query is horrible but every trivial approache is so its fine for now
+        cound_jobs_query_string="SELECT COUNT(*) FROM jobs"
+
+        cursor.execute(cound_jobs_query_string)
+        count=cursor.fetchone()
+
+        data={}
+        data["count"]=count[0]
+        data["jobs"]=jobs
+
+        return data
     except:
         cursor.execute("ROLLBACK")
         raise 
