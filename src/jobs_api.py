@@ -17,7 +17,7 @@ setup_table.create_jobs_table(conn)
 
 app = FastAPI()
 
-origins = ["http://localhost:8080","https://localhost:8080", "https://redi-school.github.io", "https://jobs.communityredi.school"]
+origins = ["https://redi-school.github.io", "https://jobs.communityredi.school"]
 
 app.add_middleware(
     CORSMiddleware,
