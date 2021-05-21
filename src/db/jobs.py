@@ -15,12 +15,16 @@ def get_jobs(conn, limit=20, skip=0, language: Optional[str] = None, employment_
     try:
         # query_string = f"SELECT *, count(*) OVER() as full_count FROM jobs WHERE ID > 0 "
         query_string = f"SELECT * FROM jobs WHERE ID > 0 "
+
+        query_string_filters="" # create a new string only for filters since we want to reuse them later
         if language:
-            query_string += f"AND language = '{language}' "
+            query_string_filters += f"AND language = '{language}' "
         if employment_type:
-            query_string += f"AND employment_type = '{employment_type}' "
+            query_string_filters += f"AND employment_type = '{employment_type}' "
         if experience_level:
-            query_string += f"AND experience_level = '{experience_level}' "
+            query_string_filters += f"AND experience_level = '{experience_level}' "
+
+        query_string+=query_string_filters 
 
         query_string += f"LIMIT {limit} OFFSET {skip};"
 
@@ -34,10 +38,11 @@ def get_jobs(conn, limit=20, skip=0, language: Optional[str] = None, employment_
         for job in jobs_tuples:
             jobs.append(dict(job))
 
-        # count all jobs in the database. Doing that in a seperate query is horrible but every trivial approache is so its fine for now
-        cound_jobs_query_string="SELECT COUNT(*) FROM jobs"
-
-        cursor.execute(cound_jobs_query_string)
+        # count all the jobs for the provided filters. Doing this in a seperate query is horrible but it should be fine for now
+        count_jobs_query_string="SELECT COUNT(*) FROM jobs WHERE ID > 0 "
+        count_jobs_query_string+=query_string_filters
+        
+        cursor.execute(count_jobs_query_string)
         count=cursor.fetchone()
 
         data={}
