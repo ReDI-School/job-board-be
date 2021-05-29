@@ -5,7 +5,7 @@ from typing import List, Dict, Optional
 import psycopg2.extras
 
 
-def get_jobs(conn, limit=20, skip=0, language: Optional[str] = None, employment_type: Optional[str] = None, experience_level: Optional[str] = None) :
+def get_jobs(conn, limit=20, skip=0, language: Optional[str] = None, employment_type: Optional[str] = None, experience_level: Optional[str] = None, order_by: Optional[str]=None, order_direction: Optional[str]=None) :
     """
     Check if the jobs table exists. If not, create it.
     Returns:
@@ -24,7 +24,13 @@ def get_jobs(conn, limit=20, skip=0, language: Optional[str] = None, employment_
         if experience_level:
             query_string_filters += f"AND experience_level = '{experience_level}' "
 
-        query_string+=query_string_filters 
+        query_string+=query_string_filters
+
+        if order_by:
+            query_string += f"ORDER BY {order_by} "
+
+        if order_direction == 'desc':
+            query_string += "DESC " 
 
         query_string += f"LIMIT {limit} OFFSET {skip};"
 
