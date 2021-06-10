@@ -29,7 +29,7 @@ def get_jobs(conn, limit=20, skip=0, language: Optional[str] = None, employment_
         if order_by:
             query_string += f"ORDER BY {order_by} "
 
-        if order_direction == 'desc':
+        if order_direction and isinstance(order_direction, str) and order_direction.lower() == 'desc':
             query_string += "DESC " 
 
         query_string += f"LIMIT {limit} OFFSET {skip};"

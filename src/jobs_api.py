@@ -55,7 +55,7 @@ def get_jobs(jobId: int):
         raise HTTPException(status_code=404, detail=str(err))
 
 @app.get("/")
-def get_jobs(skip: int = 0, limit: int = 20, language: Optional[str] = None, employment_type: Optional[str] = None, experience_level: Optional[str] = None, order_by: Optional[str]=None, order_direction: Optional[str]=None):
+def get_jobs(skip: int = 0, limit: int = 20, language: Optional[str] = None, employment_type: Optional[str] = None, experience_level: Optional[str] = None, order_by: Optional[str]="id", order_direction: Optional[str]="DESC"):
     """
     Return all jobs from DB
     """
